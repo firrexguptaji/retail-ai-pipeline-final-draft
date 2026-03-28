@@ -1,0 +1,31 @@
+2026-03-28 03:49:26,126 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 03:49:35,102 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:34:20,062 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:34:29,094 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:34:53,736 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:34:59,153 | detector | INFO | detect_products: windows=28, raw_boxes=437, filtered=132, final=124, time=5.29s
+2026-03-28 04:38:09,513 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:46:47,380 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:47:03,573 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:47:21,646 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:47:28,863 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=7.08s
+2026-03-28 04:47:32,500 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=6.34s
+2026-03-28 04:50:06,327 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 04:50:27,399 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=5.14s
+2026-03-28 04:59:45,634 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:00:37,357 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.80s
+2026-03-28 05:00:44,621 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:00:49,203 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.81s
+2026-03-28 05:01:27,648 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:01:31,947 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:01:43,806 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:02:02,682 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.80s
+2026-03-28 05:03:40,913 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:05:53,214 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:05:57,783 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:06:23,122 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.86s
+2026-03-28 05:09:06,622 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:09:22,037 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.86s
+2026-03-28 05:26:22,785 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 05:26:32,895 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.87s
+2026-03-28 05:47:39,086 | detector | INFO | Loaded YOLO model from yolov8n.pt

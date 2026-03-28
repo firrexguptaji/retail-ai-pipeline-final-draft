@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Pipeline</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f5f5f5;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        .buttons {
+            margin: 20px;
+        }
+
+        .preview {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 20px;
+        }
+
+        .preview div {
+            text-align: center;
+        }
+
+        img {
+            width: 300px;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .json-box {
+            margin-top: 30px;
+            padding: 15px;
+            background: #1e1e1e;
+            color: #00ffcc;
+            text-align: left;
+            border-radius: 8px;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>AI Product Detection & Grouping</h2>
+
+    <div class="container">
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <input type="file" id="fileInput" accept="image/*">
+            <button onclick="uploadImage()">Submit</button>
+        </div>
+
+        <!-- Image previews -->
+        <div class="preview">
+            <div>
+                <h4>Input Image</h4>
+                <img id="inputPreview" src="" />
+            </div>
+
+            <div>
+                <h4>Output Image</h4>
+                <img id="outputPreview" src="" />
+            </div>
+        </div>
+
+        <!-- JSON output -->
+        <div class="json-box">
+            <pre id="jsonOutput">Response will appear here...</pre>
+        </div>
+
+    </div>
+
+<script>
+function uploadImage() {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select an image");
+        return;
+    }
+
+    // Show input preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById("inputPreview").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    document.getElementById("jsonOutput").textContent = "Processing...";
+
+    // Send to backend
+    const formData = new FormData();
+    formData.append("image", file);
+
+    fetch("/predict", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Show JSON
+        document.getElementById("jsonOutput").textContent =
+            JSON.stringify(data, null, 2);
+
+        // Show output image
+        if (data.output_image) {
+            document.getElementById("outputPreview").src =
+                "/" + data.output_image;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error processing image");
+    });
+}
+</script>
+
+</body>
+</html>
