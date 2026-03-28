@@ -1,70 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AI Pipeline</title>
+    <title>Retail AI Pipeline</title>
+
     <style>
         body {
-            font-family: Arial;
-            text-align: center;
-            background: #f5f5f5;
+            font-family: 'Segoe UI', Arial;
+            background: linear-gradient(135deg, #eef2f7, #dfe9f3);
+            margin: 0;
+            padding: 0;
         }
 
         h2 {
-            margin-top: 30px;
+            margin-top: 20px;
+            color: #333;
         }
 
         .container {
-            width: 80%;
+            width: 85%;
             margin: auto;
-        }
-
-        .buttons {
-            margin: 20px;
-        }
-
-        .preview {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin-top: 20px;
-        }
-
-        .preview div {
             text-align: center;
         }
 
-        img {
-            width: 300px;
-            height: auto;
-            border: 2px solid #ccc;
-            border-radius: 8px;
+        /* Card */
+        .card {
+            background: white;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
-        .json-box {
-            margin-top: 30px;
-            padding: 15px;
-            background: #1e1e1e;
-            color: #00ffcc;
-            text-align: left;
-            border-radius: 8px;
-            overflow-x: auto;
-            max-height: 300px;
+        /* Buttons */
+        .buttons {
+            margin: 20px 0;
+        }
+
+        input[type="file"] {
+            padding: 8px;
         }
 
         button {
             padding: 10px 20px;
-            margin: 5px;
-            font-size: 16px;
+            margin-left: 10px;
+            font-size: 15px;
+            border: none;
+            border-radius: 6px;
+            background: #4CAF50;
+            color: white;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        /* Images */
+        .preview {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .image-box {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        img {
+            width: 320px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* JSON */
+        .json-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: #0d1117;
+            color: #00ffcc;
+            border-radius: 10px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 13px;
+        }
+
+        .loader {
+            display: none;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>AI Product Detection & Grouping</h2>
+<div class="container">
 
-    <div class="container">
+    <h2>🛒 Retail AI – Product Detection & Grouping</h2>
+
+    <div class="card">
 
         <!-- Buttons -->
         <div class="buttons">
@@ -72,46 +114,48 @@
             <button onclick="uploadImage()">Submit</button>
         </div>
 
-        <!-- Image previews -->
+        <div class="loader" id="loader">Processing...</div>
+
+        <!-- Images -->
         <div class="preview">
-            <div>
-                <h4>Input Image</h4>
-                <img id="inputPreview" src="" />
+            <div class="image-box">
+                <h4>Input</h4>
+                <img id="inputPreview" />
             </div>
 
-            <div>
-                <h4>Output Image</h4>
-                <img id="outputPreview" src="" />
+            <div class="image-box">
+                <h4>Output</h4>
+                <img id="outputPreview" />
             </div>
         </div>
 
-        <!-- JSON output -->
+        <!-- JSON -->
         <div class="json-box">
             <pre id="jsonOutput">Response will appear here...</pre>
         </div>
 
     </div>
+</div>
 
 <script>
 function uploadImage() {
-    const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
+    const file = document.getElementById("fileInput").files[0];
 
     if (!file) {
         alert("Please select an image");
         return;
     }
 
-    // Show input preview
+    // Input preview
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = e => {
         document.getElementById("inputPreview").src = e.target.result;
     };
     reader.readAsDataURL(file);
 
     document.getElementById("jsonOutput").textContent = "Processing...";
+    document.getElementById("loader").style.display = "block";
 
-    // Send to backend
     const formData = new FormData();
     formData.append("image", file);
 
@@ -121,11 +165,11 @@ function uploadImage() {
     })
     .then(res => res.json())
     .then(data => {
-        // Show JSON
+        document.getElementById("loader").style.display = "none";
+
         document.getElementById("jsonOutput").textContent =
             JSON.stringify(data, null, 2);
 
-        // Show output image
         if (data.output_image) {
             document.getElementById("outputPreview").src =
                 "/" + data.output_image;
@@ -134,6 +178,7 @@ function uploadImage() {
     .catch(err => {
         console.error(err);
         alert("Error processing image");
+        document.getElementById("loader").style.display = "none";
     });
 }
 </script>
