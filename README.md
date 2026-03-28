@@ -176,14 +176,50 @@ http://127.0.0.1:5000
 ```
 project/
 │
+├── notebooks/
+│   └── model.ipynb
 ├── gateway/
 ├── detector_service/
 ├── grouping_service/
 ├── logs/
+├── docs/
 ├── run_all.py
 ├── requirements.txt
 └── README.md
 ```
+
+---
+
+## 📊 Notebook (Model Development)
+
+The notebook (`notebooks/model.ipynb`) was used during the experimentation phase.
+
+### 🔍 Purpose
+
+* Prototyping detection pipeline
+* Testing slicing strategy
+* Developing filtering logic
+* Validating grouping approach
+* Analyzing clustering behavior
+
+---
+
+### 🔄 Transition to Production
+
+| Notebook         | Production         |
+| ---------------- | ------------------ |
+| Inline code      | Microservices      |
+| Hardcoded values | Config-driven      |
+| Sequential flow  | API-based pipeline |
+
+---
+
+### 🎯 Key Learnings Applied
+
+* Sliding window improves recall
+* Area filtering removes noise
+* Spatial + visual features improve grouping
+* Normalization stabilizes clustering
 
 ---
 
@@ -249,6 +285,43 @@ SPATIAL_WEIGHT=0.2
 
 ---
 
+## 🖼️ Example Output
+
+> Below is an example demonstrating detection and grouping results from the pipeline.
+
+### 📥 Input Image
+
+![Input Image](docs/input_example.jpg)
+
+---
+
+### 📤 Output (Grouped Products)
+
+![Output Image](docs/output_example.jpg)
+
+---
+
+### 📊 Sample JSON Output
+
+```json
+{
+  "request_id": "example-id",
+  "output_image": "outputs/result_example.jpg",
+  "results": [
+    {
+      "bbox": [100, 200, 300, 400],
+      "group_id": 2
+    },
+    {
+      "bbox": [320, 210, 500, 390],
+      "group_id": 2
+    }
+  ]
+}
+```
+
+---
+
 ## ⚡ Features
 
 * End-to-end ML pipeline
@@ -262,15 +335,15 @@ SPATIAL_WEIGHT=0.2
 ## 🔮 Future Improvements
 
 * Fine-tuned embeddings
-* Better clustering (DBSCAN)
+* Better clustering (DBSCAN / metric learning)
 * Docker deployment
-* Scaling services
+* Independent service scaling
 
 ---
 
 ## 🏁 Conclusion
 
-This project demonstrates transition from:
+This project demonstrates the transition from:
 
 ```
 Notebook → Production-ready ML system
