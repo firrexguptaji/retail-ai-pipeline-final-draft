@@ -41,3 +41,6 @@
 2026-03-28 05:26:29,985 | detector_service | INFO | /detect request received
 2026-03-28 05:26:32,895 | detector_service | INFO | Detection completed: 117 boxes, 117 crops
 2026-03-28 05:47:39,092 | detector_service | INFO | Starting Detector Service on port 8001
+2026-03-28 06:16:29,636 | detector_service | INFO | Starting Detector Service on port 8001
+2026-03-28 06:16:34,070 | detector_service | INFO | Starting Detector Service on port 8001
+2026-03-28 06:17:26,575 | detector_service | INFO | Starting Detector Service on port 8001

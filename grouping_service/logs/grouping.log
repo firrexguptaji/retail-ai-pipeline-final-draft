@@ -33,3 +33,6 @@
 2026-03-28 05:26:34,720 | grouping | INFO | Clustering produced 27 groups for 117 items
 2026-03-28 05:26:34,761 | grouping.utils | INFO | Wrote output image to ../outputs\result_128b249d-6b82-4fae-8883-e31f71437a42.jpg
 2026-03-28 05:47:38,662 | grouping | INFO | Loaded model: resnet18
+2026-03-28 06:16:27,517 | grouping | INFO | Loaded model: resnet18
+2026-03-28 06:16:31,611 | grouping | INFO | Loaded model: resnet18
+2026-03-28 06:17:25,554 | grouping | INFO | Loaded model: resnet18

@@ -39,3 +39,6 @@ TypeError: group_products() missing 2 required positional arguments: 'boxes' and
 2026-03-28 05:26:34,720 | grouping_service | INFO | Grouping completed: 117 labels
 2026-03-28 05:26:34,761 | grouping_service | INFO | Saved output image: result_128b249d-6b82-4fae-8883-e31f71437a42.jpg (request_id=128b249d-6b82-4fae-8883-e31f71437a42)
 2026-03-28 05:47:38,671 | grouping_service | INFO | Starting Grouping Service on port 8002
+2026-03-28 06:16:27,521 | grouping_service | INFO | Starting Grouping Service on port 8002
+2026-03-28 06:16:31,611 | grouping_service | INFO | Starting Grouping Service on port 8002
+2026-03-28 06:17:25,557 | grouping_service | INFO | Starting Grouping Service on port 8002

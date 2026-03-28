@@ -29,3 +29,6 @@
 2026-03-28 05:26:22,785 | detector | INFO | Loaded YOLO model from yolov8n.pt
 2026-03-28 05:26:32,895 | detector | INFO | detect_products: windows=28, raw=437, after_filter=117, final=117, time=2.87s
 2026-03-28 05:47:39,086 | detector | INFO | Loaded YOLO model from yolov8n.pt
+2026-03-28 06:16:29,634 | detector | INFO | Loaded YOLO model from model\yolov8n.pt
+2026-03-28 06:16:34,068 | detector | INFO | Loaded YOLO model from model\yolov8n.pt
+2026-03-28 06:17:26,568 | detector | INFO | Loaded YOLO model from ..\model\yolov8n.pt

@@ -1,6 +1,6 @@
 import os
 
-MODEL_PATH = os.getenv("MODEL_PATH", "model\\yolov8n.pt")
+MODEL_PATH = os.getenv("MODEL_PATH", "..\\model\\yolov8n.pt")
 
 SLICE_SIZE = int(os.getenv("SLICE_SIZE", 512))
 OVERLAP = float(os.getenv("OVERLAP", 0.4))
