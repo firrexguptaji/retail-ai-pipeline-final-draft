@@ -1,17 +1,11 @@
-import os
-import sys
 import requests
-from config import DETECTOR_URL, GROUPING_URL, REQUEST_TIMEOUT
+import time
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from .config import DETECTOR_URL, GROUPING_URL, REQUEST_TIMEOUT
 from common.logger import setup_logger
 
 logger = setup_logger("gateway.client")
 
-
-# -------------------------------
-# Detector Call
-# -------------------------------
 
 def call_detector(file_bytes, filename="image.jpg", mimetype="image/jpeg"):
     logger.info(f"Calling detector at {DETECTOR_URL}")
@@ -21,13 +15,17 @@ def call_detector(file_bytes, filename="image.jpg", mimetype="image/jpeg"):
             "image": (filename, file_bytes, mimetype)
         }
 
+        start = time.time()
+
         response = requests.post(
             DETECTOR_URL,
             files=files,
             timeout=REQUEST_TIMEOUT
         )
 
-        logger.info(f"Detector response: {response.status_code}")
+        elapsed = time.time() - start
+
+        logger.info(f"Detector response: {response.status_code} ({elapsed:.2f}s)")
 
         if response.status_code != 200:
             logger.error(f"Detector failed: {response.status_code} {response.text}")
@@ -35,26 +33,26 @@ def call_detector(file_bytes, filename="image.jpg", mimetype="image/jpeg"):
 
         return response.json()
 
-    except Exception:
+    except Exception as e:
         logger.exception("Error calling detector service")
         raise
 
-
-# -------------------------------
-# Grouping Call
-# -------------------------------
 
 def call_grouping(detector_output):
     logger.info(f"Calling grouping at {GROUPING_URL}")
 
     try:
+        start = time.time()
+
         response = requests.post(
             GROUPING_URL,
             json=detector_output,
             timeout=REQUEST_TIMEOUT
         )
 
-        logger.info(f"Grouping response: {response.status_code}")
+        elapsed = time.time() - start
+
+        logger.info(f"Grouping response: {response.status_code} ({elapsed:.2f}s)")
 
         if response.status_code != 200:
             logger.error(f"Grouping failed: {response.status_code} {response.text}")
@@ -62,6 +60,6 @@ def call_grouping(detector_output):
 
         return response.json()
 
-    except Exception:
+    except Exception as e:
         logger.exception("Error calling grouping service")
         raise

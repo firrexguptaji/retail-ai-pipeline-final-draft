@@ -1,7 +1,3 @@
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.logger import setup_logger
 
 from flask import Flask, request, jsonify
@@ -9,28 +5,20 @@ import base64
 import numpy as np
 import cv2
 
-from grouping import group_products
-from utils import draw_boxes, save_output
+from .grouping import group_products
+from .utils import draw_boxes, save_output
 
 app = Flask(__name__)
-
 logger = setup_logger("grouping_service")
 
-model_loaded = False
-
-def load_model_once():
-    global model_loaded
-    model_loaded = True
 
 @app.route("/health", methods=["GET"])
 def health():
     return {"service": "grouping", "status": "ok"}, 200
 
+
 @app.route("/ready")
 def ready():
-    if not model_loaded:
-        return {"status": "not ready", "reason": "model not loaded"}, 503
-
     return {"service": "grouping", "status": "ready"}, 200
 
 def decode_image(base64_str):
@@ -93,4 +81,4 @@ def group():
 
 if __name__ == "__main__":
     logger.info("Starting Grouping Service on port 8002")
-    app.run(port=8002, debug=True)
+    app.run(port=8002, debug=True, use_reloader=False)

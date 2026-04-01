@@ -25,4 +25,9 @@ SPATIAL_WEIGHT = float(os.getenv("SPATIAL_WEIGHT", 0.1))
 DEVICE = os.getenv("DEVICE", "cpu")
 
 #Output
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "../outputs")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+OUTPUT_DIR = os.getenv(
+    "OUTPUT_DIR",
+    os.path.join(BASE_DIR, "outputs")
+)

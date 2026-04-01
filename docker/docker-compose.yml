@@ -8,12 +8,13 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ../models:/models   
+      - ../models:/models
       - ../outputs:/outputs
     environment:
       - SERVICE_NAME=detector
+      - OUTPUT_DIR=/outputs
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8001/ready"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -24,17 +25,17 @@ services:
       dockerfile: grouping_service/Dockerfile
     ports:
       - "8002:8002"
+    volumes:
+      - ~/.cache/torch:/root/.cache/torch
+      - ../outputs:/outputs
     environment:
       - SERVICE_NAME=grouping
-    volumes:
-    - ~/.cache/torch:/root/.cache/torch
-    - ../outputs:/outputs
+      - OUTPUT_DIR=/outputs
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8002/ready"]
       interval: 10s
       timeout: 5s
       retries: 3
-
 
   gateway:
     build:
@@ -43,17 +44,19 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - detector
-      - grouping
+      detector:
+        condition: service_healthy
+      grouping:
+        condition: service_healthy
     environment:
       - SERVICE_NAME=gateway
-      - DETECTOR_URL=http://detector:8001/detect
-      - GROUPING_URL=http://grouping:8002/group
-
+      - DETECTOR_BASE_URL=http://detector:8001
+      - GROUPING_BASE_URL=http://grouping:8002
+      - OUTPUT_DIR=/outputs
     volumes:
       - ../outputs:/outputs
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 10s 
+      test: ["CMD", "curl", "-f", "http://localhost:5000/ready"]
+      interval: 10s
       timeout: 5s
       retries: 3

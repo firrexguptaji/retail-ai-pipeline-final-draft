@@ -5,12 +5,13 @@ import requests
 from flask import Flask, request, jsonify, render_template, send_from_directory
 
 from common.logger import setup_logger
-from client import call_detector, call_grouping
-from config import (
+from .client import call_detector, call_grouping
+from .config import (
     DETECTOR_URL,
     GROUPING_URL,
     DETECTOR_READY_URL,
-    GROUPING_READY_URL
+    GROUPING_READY_URL,
+    OUTPUT_DIR
 )
 
 # -------------------------------
@@ -19,8 +20,7 @@ from config import (
 
 logger = setup_logger("gateway")
 app = Flask(__name__)
-
-OUTPUT_DIR = "/outputs"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 # -------------------------------
@@ -29,6 +29,7 @@ OUTPUT_DIR = "/outputs"
 
 def wait_for_service(url, name, timeout=30):
     logger.info(f"[WAITING] {name}...")
+    
 
     for i in range(timeout):
         try:
@@ -37,6 +38,7 @@ def wait_for_service(url, name, timeout=30):
                 logger.info(f"[READY] {name}")
                 return
         except Exception:
+            logger.info(f"Checking URL: {url}")
             logger.warning(f"{name} not ready yet... ({i+1}/{timeout})")
 
         time.sleep(1)
@@ -113,9 +115,10 @@ def predict():
 
 if __name__ == "__main__":
     logger.info("Starting Gateway Service (DEV MODE)")
+    logger.info(f"GATEWAY OUTPUT_DIR = {OUTPUT_DIR}")
 
     # Only for local dev (NOT for Docker/gunicorn)
     wait_for_service(DETECTOR_READY_URL, "Detector")
     wait_for_service(GROUPING_READY_URL, "Grouping")
 
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
