@@ -14,7 +14,7 @@ from config import (
     MAX_AREA_RATIO
 )
 
-from util.logger import setup_logger
+from common.logger import setup_logger
 
 logger = setup_logger("detector")
 

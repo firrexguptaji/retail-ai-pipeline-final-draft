@@ -1,3 +1,4 @@
+
 # 🛒 Retail AI Pipeline – Product Detection & Grouping
 
 ## 📌 Overview
@@ -15,16 +16,18 @@ It is built using a **microservice architecture** with clear separation of respo
 ## 🏗️ Architecture
 
 ```
+
 Client (UI)
-   ↓
+↓
 Gateway Service (Flask)
-   ↓
+↓
 Detector Service (YOLO)
-   ↓
+↓
 Grouping Service (ResNet + Clustering)
-   ↓
+↓
 Final Output (Image + JSON)
-```
+
+````
 
 ---
 
@@ -94,7 +97,7 @@ Final Output (Image + JSON)
 ```bash
 python -m venv venv
 venv\Scripts\activate
-```
+````
 
 #### Mac/Linux
 
@@ -147,6 +150,35 @@ http://127.0.0.1:5000
 
 ---
 
+## 🐳 Docker Deployment
+
+### 🔹 Run with Docker
+
+```bash
+cd docker
+docker-compose up --build
+```
+
+---
+
+### 🔹 Access UI
+
+```
+http://localhost:5000
+```
+
+---
+
+### 🔹 Service Ports
+
+| Service  | Port |
+| -------- | ---- |
+| Gateway  | 5000 |
+| Detector | 8001 |
+| Grouping | 8002 |
+
+---
+
 ## 🧪 API Flow
 
 1. Upload image → Gateway
@@ -154,12 +186,14 @@ http://127.0.0.1:5000
 3. Gateway → Grouping
 4. Final response returned
 
+---
+
 ### Example Response
 
 ```json
 {
   "request_id": "...",
-  "output_image": "outputs/result_xxx.jpg",
+  "output_image": "/outputs/result_xxx.jpg",
   "results": [
     {
       "bbox": [x1, y1, x2, y2],
@@ -183,6 +217,10 @@ project/
 ├── grouping_service/
 ├── logs/
 ├── docs/
+├── models/
+├── outputs/
+├── docker/
+│   └── docker-compose.yml
 ├── run_all.py
 ├── requirements.txt
 └── README.md
@@ -306,7 +344,7 @@ SPATIAL_WEIGHT=0.2
 ```json
 {
   "request_id": "example-id",
-  "output_image": "outputs/result_example.jpg",
+  "output_image": "/outputs/result_example.jpg",
   "results": [
     {
       "bbox": [100, 200, 300, 400],
@@ -336,7 +374,6 @@ SPATIAL_WEIGHT=0.2
 
 * Fine-tuned embeddings
 * Better clustering (DBSCAN / metric learning)
-* Docker deployment
 * Independent service scaling
 
 ---
@@ -360,3 +397,4 @@ Combining:
 ## 👤 Author
 
 Aman Gupta
+
