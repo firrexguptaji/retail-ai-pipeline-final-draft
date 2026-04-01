@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  detector:
+    build:
+      context: ..
+      dockerfile: detector_service/Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ../models:/models   
+      - ../outputs:/outputs
+    environment:
+      - SERVICE_NAME=detector
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grouping:
+    build:
+      context: ..
+      dockerfile: grouping_service/Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      - SERVICE_NAME=grouping
+    volumes:
+    - ~/.cache/torch:/root/.cache/torch
+    - ../outputs:/outputs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: gateway/Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - detector
+      - grouping
+    environment:
+      - SERVICE_NAME=gateway
+      - DETECTOR_URL=http://detector:8001/detect
+      - GROUPING_URL=http://grouping:8002/group
+
+    volumes:
+      - ../outputs:/outputs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s 
+      timeout: 5s
+      retries: 3

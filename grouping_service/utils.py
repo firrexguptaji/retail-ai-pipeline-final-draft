@@ -3,7 +3,7 @@ import uuid
 import os
 
 from config import OUTPUT_DIR
-from util.logger import setup_logger
+from common.logger import setup_logger
 
 logger = setup_logger("grouping.utils")
 
@@ -31,11 +31,16 @@ def draw_boxes(image, boxes, labels):
 
 def save_output(image):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+
     request_id = str(uuid.uuid4())
     filename = f"result_{request_id}.jpg"
     path = os.path.join(OUTPUT_DIR, filename)
 
-    cv2.imwrite(path, image)
+    success = cv2.imwrite(path, image)
+
+    if not success:
+        raise Exception("Failed to write output image")
+
     logger.info(f"Wrote output image to {path}")
 
     return filename, request_id

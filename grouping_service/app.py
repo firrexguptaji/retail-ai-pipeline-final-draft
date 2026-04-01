@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from util.logger import setup_logger
+from common.logger import setup_logger
 
 from flask import Flask, request, jsonify
 import base64
@@ -16,6 +16,22 @@ app = Flask(__name__)
 
 logger = setup_logger("grouping_service")
 
+model_loaded = False
+
+def load_model_once():
+    global model_loaded
+    model_loaded = True
+
+@app.route("/health", methods=["GET"])
+def health():
+    return {"service": "grouping", "status": "ok"}, 200
+
+@app.route("/ready")
+def ready():
+    if not model_loaded:
+        return {"status": "not ready", "reason": "model not loaded"}, 503
+
+    return {"service": "grouping", "status": "ready"}, 200
 
 def decode_image(base64_str):
     img_bytes = base64.b64decode(base64_str)
