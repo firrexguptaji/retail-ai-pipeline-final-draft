@@ -1,23 +1,29 @@
 import os
 
-DETECTOR_URL = os.getenv(
-    "DETECTOR_URL",
-    "http://detector:8001/detect"
+# Base URLs (no endpoints)
+DETECTOR_BASE_URL = os.getenv(
+    "DETECTOR_BASE_URL",
+    "http://127.0.0.1:8001"
 )
 
-GROUPING_URL = os.getenv(
-    "GROUPING_URL",
-    "http://grouping:8002/group"
+GROUPING_BASE_URL = os.getenv(
+    "GROUPING_BASE_URL",
+    "http://127.0.0.1:8002"
 )
 
-DETECTOR_READY_URL = os.getenv(
-    "DETECTOR_READY_URL",
-    "http://detector:8001/ready"
-)
+# Endpoints
+DETECTOR_URL = f"{DETECTOR_BASE_URL}/detect"
+GROUPING_URL = f"{GROUPING_BASE_URL}/group"
 
-GROUPING_READY_URL = os.getenv(
-    "GROUPING_READY_URL",
-    "http://grouping:8002/ready"
-)
+DETECTOR_READY_URL = f"{DETECTOR_BASE_URL}/ready"
+GROUPING_READY_URL = f"{GROUPING_BASE_URL}/ready"
 
 REQUEST_TIMEOUT = 30
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+OUTPUT_DIR = os.getenv(
+    "OUTPUT_DIR",
+    os.path.join(BASE_DIR, "outputs")
+)

@@ -4,7 +4,7 @@ from sklearn.cluster import AgglomerativeClustering
 import numpy as np
 import cv2
 
-from config import (
+from .config import (
     DISTANCE_THRESHOLD,
     CLUSTERING_METRIC,
     CLUSTERING_LINKAGE,

@@ -2,7 +2,7 @@ import cv2
 import uuid
 import os
 
-from config import OUTPUT_DIR
+from .config import OUTPUT_DIR
 from common.logger import setup_logger
 
 logger = setup_logger("grouping.utils")

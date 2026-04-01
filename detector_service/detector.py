@@ -5,7 +5,7 @@ import time
 import torch
 from torchvision.ops import nms
 
-from config import (
+from .config import (
     MODEL_PATH,
     SLICE_SIZE,
     OVERLAP,
@@ -18,13 +18,23 @@ from common.logger import setup_logger
 
 logger = setup_logger("detector")
 
-# Load model
-model = YOLO(MODEL_PATH)
-logger.info(f"Loaded YOLO model from {MODEL_PATH}")
+# -------------------------------
+# Model (single source of truth)
+# -------------------------------
+model = None
+
+
+def load_model():
+    global model
+
+    if model is None:
+        logger.info(f"Loading YOLO model from {MODEL_PATH}")
+        model = YOLO(MODEL_PATH)
+        logger.info("Model loaded successfully")
 
 
 # -------------------------------
-# Sliding Window (Notebook Match)
+# Sliding Window
 # -------------------------------
 def sliding_window(image):
     h, w, _ = image.shape
@@ -45,9 +55,14 @@ def sliding_window(image):
 
 
 # -------------------------------
-# MAIN DETECTION
+# Detection
 # -------------------------------
 def detect_products(image):
+    global model
+
+    if model is None:
+        raise RuntimeError("Model not loaded")
+
     start = time.time()
 
     h_img, w_img, _ = image.shape
@@ -56,7 +71,7 @@ def detect_products(image):
     all_boxes = []
     windows = 0
 
-    # 1️⃣ Sliding window + YOLO
+    # Sliding window inference
     for x_offset, y_offset, window in sliding_window(image):
         windows += 1
 
@@ -75,7 +90,7 @@ def detect_products(image):
 
             all_boxes.append([x1, y1, x2, y2])
 
-    # 2️⃣ Area filtering (relative)
+    # Area filtering
     filtered_boxes = []
     for x1, y1, x2, y2 in all_boxes:
         area = (x2 - x1) * (y2 - y1)
@@ -83,59 +98,42 @@ def detect_products(image):
         if MIN_AREA_RATIO * img_area < area < MAX_AREA_RATIO * img_area:
             filtered_boxes.append([x1, y1, x2, y2])
 
-    if len(filtered_boxes) == 0:
+    if not filtered_boxes:
         return [], []
 
-    # 3️⃣ Torch NMS (prefer smaller boxes)
+    # NMS (prefer smaller boxes)
     boxes_tensor = torch.tensor(filtered_boxes, dtype=torch.float32)
 
-    areas = (boxes_tensor[:, 2] - boxes_tensor[:, 0]) * (boxes_tensor[:, 3] - boxes_tensor[:, 1])
+    areas = (boxes_tensor[:, 2] - boxes_tensor[:, 0]) * (
+        boxes_tensor[:, 3] - boxes_tensor[:, 1]
+    )
     scores = 1 / (areas + 1e-6)
 
     keep = nms(boxes_tensor, scores, iou_threshold=IOU_THRESHOLD)
     filtered_boxes = boxes_tensor[keep].int().tolist()
 
-    # 4️⃣ Remove duplicates (notebook logic)
+    # Remove duplicates
     unique_boxes = []
-
     for box in filtered_boxes:
         x1, y1, x2, y2 = box
 
-        keep = True
-        for bx1, by1, bx2, by2 in unique_boxes:
-            if abs(x1 - bx1) < 10 and abs(y1 - by1) < 10:
-                keep = False
-                break
-
-        if keep:
+        if not any(abs(x1 - bx1) < 10 and abs(y1 - by1) < 10 for bx1, by1, _, _ in unique_boxes):
             unique_boxes.append(box)
 
-    filtered_boxes = unique_boxes
-
-    # 5️⃣ Remove wide boxes (aspect ratio filter)
+    # Aspect ratio filter
     clean_boxes = []
-
-    for x1, y1, x2, y2 in filtered_boxes:
+    for x1, y1, x2, y2 in unique_boxes:
         width = x2 - x1
         height = y2 - y1
 
-        if height == 0:
-            continue
-
-        aspect_ratio = width / height
-
-        if aspect_ratio < 3:
+        if height > 0 and (width / height) < 3:
             clean_boxes.append([x1, y1, x2, y2])
 
-    filtered_boxes = clean_boxes
-
-    # 6️⃣ Crop extraction (padding + resize)
+    # Crops
     crops = []
     final_boxes = []
 
-    for (x1, y1, x2, y2) in filtered_boxes:
-
-        # padding
+    for (x1, y1, x2, y2) in clean_boxes:
         pad = 5
         x1 = max(0, x1 - pad)
         y1 = max(0, y1 - pad)
@@ -147,7 +145,6 @@ def detect_products(image):
         if crop.size == 0:
             continue
 
-        # resize (match notebook)
         crop = cv2.resize(crop, (224, 224))
 
         crops.append(crop)
@@ -156,8 +153,7 @@ def detect_products(image):
     elapsed = time.time() - start
 
     logger.info(
-        f"detect_products: windows={windows}, raw={len(all_boxes)}, "
-        f"after_filter={len(filtered_boxes)}, final={len(final_boxes)}, time={elapsed:.2f}s"
+        f"windows={windows}, raw={len(all_boxes)}, final={len(final_boxes)}, time={elapsed:.2f}s"
     )
 
     return final_boxes, crops
