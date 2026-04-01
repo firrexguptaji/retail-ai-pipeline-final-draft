@@ -89,7 +89,7 @@ Final Output (Image + JSON)
 ---
 
 ## 🚀 How to Run
-
+##  Dev Mode
 ### 🔹 1. Create Virtual Environment (Recommended)
 
 #### Windows
@@ -111,7 +111,7 @@ source venv/bin/activate
 ### 🔹 2. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
 ---
